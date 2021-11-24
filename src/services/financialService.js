@@ -14,7 +14,16 @@ async function requireFinancials ({ userId }) {
     return events;
 }
 
+async function sumFinancials ({ userId }) {
+
+    const events = await financialRepository.selectFinancials({ userId });
+  
+    const sum = events.rows.reduce((total, event) => event.type === 'INCOME' ? total + event.value : total - event.value, 0);
+    return sum;
+}
+
 export {
     createFinancial,
     requireFinancials,
+    sumFinancials,
 }

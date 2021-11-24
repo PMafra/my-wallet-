@@ -67,7 +67,34 @@ async function getFinancials (req, res) {
     }
   }
 
+  async function getFinancialsSum (req, res) {
+    try {
+      const authorization = req.headers.authorization || "";
+      const token = authorization.split('Bearer ')[1];
+  
+      if (!token) {
+        return res.sendStatus(401);
+      }
+  
+      let user;
+  
+      try {
+        user = jwt.verify(token, process.env.JWT_SECRET);
+      } catch {
+        return res.sendStatus(401);
+      }
+  
+      const sum = await financialService.sumFinancials({ userId: user.id });
+      
+      res.send({ sum });
+    } catch (err) {
+      console.error(err);
+      res.sendStatus(500);
+    }
+  }
+
 export {
     addFinancial,
     getFinancials,
+    getFinancialsSum,
 }
