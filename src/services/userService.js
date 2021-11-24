@@ -6,7 +6,7 @@ async function createUser ({ name, email, password }) {
 
     const existingUserWithGivenEmail = await userRepository.selectUser({ email });
   
-    if (existingUserWithGivenEmail.rows[0]) {
+    if (existingUserWithGivenEmail) {
         return 'already exists';
     }
   
@@ -21,12 +21,12 @@ async function createUserSession ({ email, password }) {
 
       const user = await userRepository.selectUser({ email });
   
-      if (!user.rows[0] || !bcrypt.compareSync(password, user.rows[0].password)) {
+      if (!user || !bcrypt.compareSync(password, user.password)) {
         return null;
       }
   
       const token = jwt.sign({
-        id: user.rows[0].id
+        id: user.id
       }, process.env.JWT_SECRET);
 
       return token;

@@ -16,7 +16,7 @@ async function selectUser ({ email }) {
         [email]
       );
 
-    return result;
+    return result.rows[0];
 }
 
 export {
