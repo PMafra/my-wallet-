@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.post("/sign-up", userController.signUp());
+app.post("/sign-up", userController.signUp);
 
 app.post("/sign-in", async (req, res) => {
   try {
