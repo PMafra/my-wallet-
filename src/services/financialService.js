@@ -7,6 +7,14 @@ async function createFinancial ({ userId, value, type }) {
     return true;
 }
 
+async function requireFinancials ({ userId }) {
+
+    const events = await financialRepository.selectFinancials({ userId });
+
+    return events;
+}
+
 export {
     createFinancial,
+    requireFinancials,
 }

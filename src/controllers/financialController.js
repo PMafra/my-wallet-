@@ -34,13 +34,40 @@ async function addFinancial (req, res) {
   
       await financialService.createFinancial({ userId: user.id, value, type });
   
-      res.sendStatus(201);
+      return res.sendStatus(201);
     } catch (err) {
       console.error(err);
-      res.sendStatus(500);
+      return res.sendStatus(500);
+    }
+  }
+
+async function getFinancials (req, res) {
+    try {
+      const authorization = req.headers.authorization || "";
+      const token = authorization.split('Bearer ')[1];
+  
+      if (!token) {
+        return res.sendStatus(401);
+      }
+  
+      let user;
+  
+      try {
+        user = jwt.verify(token, process.env.JWT_SECRET);
+      } catch {
+        return res.sendStatus(401);
+      }
+  
+      const events = await financialService.requireFinancials({ userId: user.id });
+  
+      return res.send(events.rows);
+    } catch (err) {
+      console.error(err);
+      return res.sendStatus(500);
     }
   }
 
 export {
-    addFinancial
+    addFinancial,
+    getFinancials,
 }
